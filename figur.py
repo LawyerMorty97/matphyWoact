@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# AVHENGER AV AT MODULEN tkinter er installert.
+
 import tkinter as tk
 import math
 
