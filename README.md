@@ -9,4 +9,3 @@ Her finnes python-kode som brukes i kurset RF3100 ved Westerdals.
 # Merknader
 
 Koden er skrevet i **python3** og er ikke kompatibel med python2.
-
