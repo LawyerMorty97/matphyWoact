@@ -12,16 +12,17 @@ def dot(u,v):
 
 # Dette handler oppgaven om 
 def dekomposisjon(u,v):
-
-    return None,None
-
-
+    # SKRIV INN KODE HER
+    return [0 for ui in u],[0 for vi in v] # Denne linjen må naturligvis også endres
 
 
-u = [3,4,3]
-v = [4,3,2]
-
-vParallell, vPerp = dekomposisjon(u,v)
 
 
-print(vParallell,vPerp)
+if __name__=="__main__":
+    u = [3,4,3]
+    v = [4,3,2]
+
+    vParallell, vPerp = dekomposisjon(u,v)
+
+
+    print(vParallell,vPerp)
