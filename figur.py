@@ -110,25 +110,17 @@ class figur:
         """Tegner sirkel med sentrum i x0,y0 og radius r"""
         self.polygon(( x0+r*math.cos(0.01*i) for i in range(629)),(y0+r*math.sin(0.01*i) for i in range(629)))
 
-    def settRekkevidde(self,xmin,xmax,ymin,ymax):
-        """
-        Setter grensene for x- og y- verdier i figuren
-
-        xmin = x-verdi til venstre i vinduet
-        xmax = x-verdi til høyre i vinduet
-        ymin = y-verdi på toppen av vinduet
-        ymax = y-verdi nederst i vinduet
-        """
-        self.xmin = xmin
-        self.xmax = xmax
-        self.ymin = ymin
-        self.ymax = ymax
+    def piksler(self):
+        for x in range(self._bredde):
+            for y in range(self._høyde):
+                yield x,y
 
     def inverterYretning(self):
         self.ymin,self.ymax = self.ymax,self.ymin
 
     def vis(self):
         self._rot.mainloop();
+
 
 
 #
@@ -158,9 +150,9 @@ if __name__=="__main__":
 
     fig.punkt(0,0)
 
-
-    for i in range(100):
-        fig.settPiksel(i,i**2/10,"black")
+    for x,y in fig.piksler():
+        if x < y:
+            fig.settPiksel(x,y,"blue")
 
     fig.vis()
 
