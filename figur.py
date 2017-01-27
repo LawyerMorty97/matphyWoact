@@ -34,11 +34,11 @@ class figur:
     """
 
     def __init__(self,bredde=1000,høyde=600):
-        self.bredde= bredde
-        self.høyde = høyde
-        self.rot = tk.Tk()
+        self._bredde = bredde
+        self._høyde = høyde
+        self._rot = tk.Tk()
 
-        self.lerret = tk.Canvas(self.rot, width = self.bredde, height = self.høyde)
+        self.lerret = tk.Canvas(self._rot, width = self._bredde, height = self._høyde)
         self.lerret.pack()
         
         self.xmin, self.xmax = 0,bredde
@@ -50,23 +50,22 @@ class figur:
         """private helper function. Maps the interval [a,b] onto the interval [A,B]"""
         return A + (t-a)/(b-a)*(B-A)  
 
-    def transformasjon(self,x,y):
-        return figur._remap(x,self.xmin,self.xmax,0,self.bredde), figur._remap(y,self.ymin,self.ymax,self.høyde,0)
-    
-
+    def _transform(self,x,y):
+        """Transformerer gitte xy-verdier til vinduskoordinater"""
+        return figur._remap(x,self.xmin,self.xmax,0,self._bredde), figur._remap(y,self.ymin,self.ymax,self._høyde,0)
 
     def linje(self,x0,y0,x1,y1,**kwargs):
         """ Tegner en linje fra (x0,y0) til (x1,y1)"""
 
-        x0,y0 = self.transformasjon(x0,y0)
-        x1,y1 = self.transformasjon(x1,y1)
+        x0,y0 = self._transform(x0,y0)
+        x1,y1 = self._transform(x1,y1)
         self.lerret.create_line(x0,y0,x1,y1,**kwargs)
 
     def pil(self,x0,y0,x1,y1):
         """ Tegner en linje fra (x0,y0) til (x1,y1)"""
 
-        x0,y0 = self.transformasjon(x0,y0)
-        x1,y1 = self.transformasjon(x1,y1)
+        x0,y0 = self._transform(x0,y0)
+        x1,y1 = self._transform(x1,y1)
 
         lengde = math.sqrt((x1-x0)**2 + (y1-y0)**2)
         dim = 5
@@ -79,13 +78,17 @@ class figur:
 
     def punkt(self,x,y):
         """Tegner en prikk i punktet (x,y)"""
-        x,y = self.transformasjon(x,y)
+        x,y = self._transform(x,y)
         self.lerret.create_oval(x-2,y-2,x+2,y+2,fill="black")
 
     def punkter(self,xs,ys):
         """Tegner prikker i punktene (xs[0],ys[0]), (xs[1],ys[1]) ,...."""
         for x,y in zip(xs,ys):
             self.punkt(x,y);
+
+    def settPiksel(self,x,y,farge):
+        """setter fargen `farge` på pikselen med vinduskoordinater `x` `y`"""
+        self.lerret.create_rectangle(x,y,x,y,fill=farge,width=0)
 
     # AVHENGER AV linje og punkt
     def polygon(self,xs,ys):
@@ -116,7 +119,7 @@ class figur:
         ymin = y-verdi på toppen av vinduet
         ymax = y-verdi nederst i vinduet
         """
-        self.xmin  = xmin
+        self.xmin = xmin
         self.xmax = xmax
         self.ymin = ymin
         self.ymax = ymax
@@ -125,7 +128,7 @@ class figur:
         self.ymin,self.ymax = self.ymax,self.ymin
 
     def vis(self):
-        self.rot.mainloop();
+        self._rot.mainloop();
 
 
 #
@@ -134,7 +137,10 @@ class figur:
 if __name__=="__main__":
     fig = figur()
 
-    fig.settRekkevidde(-1.5,1.5,-1.5,1.5)
+    fig.xmin = -1.5
+    fig.xmax = 1.5
+    fig.ymin = -1.5
+    fig.ymax = 1.5
 
     fig.rektangel(0.5,0.5,0.9,0.7)
     fig.punkt(.4,.5)
@@ -151,6 +157,10 @@ if __name__=="__main__":
     fig.sirkel(0.5,0.5,0.5)
 
     fig.punkt(0,0)
+
+
+    for i in range(100):
+        fig.settPiksel(i,i**2/10,"black")
 
     fig.vis()
 
