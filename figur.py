@@ -88,7 +88,7 @@ class figur:
 
     def settPiksel(self,x,y,farge):
         """setter fargen `farge` på pikselen med vinduskoordinater `x` `y`"""
-        self.lerret.create_rectangle(x,y,x,y,fill=farge,width=0)
+        self.lerret.create_rectangle(x,y,x+1,y+1,fill=farge,width=0)
 
     # AVHENGER AV linje og punkt
     def polygon(self,xs,ys):
