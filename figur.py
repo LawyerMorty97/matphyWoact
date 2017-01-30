@@ -3,7 +3,6 @@
 # AVHENGER AV AT MODULEN tkinter er installert.
 
 import tkinter as tk
-import math
 
 class figur:
     """Klasse for å lage enkle figurer
@@ -54,6 +53,11 @@ class figur:
         """Transformerer gitte xy-verdier til vinduskoordinater"""
         return figur._remap(x,self.xmin,self.xmax,0,self._bredde), figur._remap(y,self.ymin,self.ymax,self._høyde,0)
 
+
+
+    #
+    # Geometriske former
+    #########################3
     def linje(self,x0,y0,x1,y1,**kwargs):
         """ Tegner en linje fra (x0,y0) til (x1,y1)"""
 
@@ -61,20 +65,12 @@ class figur:
         x1,y1 = self._transform(x1,y1)
         self.lerret.create_line(x0,y0,x1,y1,**kwargs)
 
-    def pil(self,x0,y0,x1,y1):
+    def vektor(self,x0,y0,x1,y1):
         """ Tegner en linje fra (x0,y0) til (x1,y1)"""
-
         x0,y0 = self._transform(x0,y0)
         x1,y1 = self._transform(x1,y1)
 
-        lengde = math.sqrt((x1-x0)**2 + (y1-y0)**2)
-        dim = 5
-        dx = (x1-x0)/lengde*dim
-        dy = (y1-y0)/lengde*dim
-        
-        self.lerret.create_line(x0,y0,x1,y1)
-        self.lerret.create_line(x1,y1,x1-(3*dx-dy),y1-(dx+3*dy))
-        self.lerret.create_line(x1,y1,x1-(3*dx+dy),y1-(-dx+3*dy))
+        self.lerret.create_line(x0,y0,x1,y1,arrow=tk.LAST,arrowshape=(12,15,5))
 
     def punkt(self,x,y):
         """Tegner en prikk i punktet (x,y)"""
@@ -86,9 +82,6 @@ class figur:
         for x,y in zip(xs,ys):
             self.punkt(x,y);
 
-    def settPiksel(self,x,y,farge):
-        """setter fargen `farge` på pikselen med vinduskoordinater `x` `y`"""
-        self.lerret.create_rectangle(x,y,x+1,y+1,fill=farge,width=0)
 
     # AVHENGER AV linje og punkt
     def polygon(self,xs,ys):
@@ -109,15 +102,22 @@ class figur:
     def sirkel(self, x0,y0, r):
         """Tegner sirkel med sentrum i x0,y0 og radius r"""
         self.polygon(( x0+r*math.cos(0.01*i) for i in range(629)),(y0+r*math.sin(0.01*i) for i in range(629)))
+    
+    #
+    # DIREKTE TILGANG TIL PIKSLENE
+    #################################
+    def settPiksel(self,x,y,farge):
+        """setter fargen `farge` på pikselen med vinduskoordinater `x` `y`"""
+        self.lerret.create_rectangle(x,y,x+1,y+1,fill=farge,width=0)
 
     def piksler(self):
         for x in range(self._bredde):
             for y in range(self._høyde):
                 yield x,y
 
-    def inverterYretning(self):
-        self.ymin,self.ymax = self.ymax,self.ymin
-
+    #
+    # Må kalles for at figuren skal vises
+    ###########################################
     def vis(self):
         self._rot.mainloop();
 
@@ -127,6 +127,7 @@ class figur:
 # Uformell enhetstesting
 #
 if __name__=="__main__":
+    import math
     fig = figur()
 
     fig.xmin = -1.5
@@ -134,27 +135,42 @@ if __name__=="__main__":
     fig.ymin = -1.5
     fig.ymax = 1.5
 
+    
     fig.rektangel(0.5,0.5,0.9,0.7)
     fig.punkt(.4,.5)
-
-    fig.pil(-1,0,1,1)
-    fig.pil(0,0,.5,.5)
-    fig.pil(0,0,.5,-.5)
-
-    xs = ( math.sin(0.01*i) for i in range(629) ) # GENERATOR COMPREHENSION SYNTAKS
-    ys = ( math.cos(0.01*i) for i in range(629) ) # GENERATOR COMPREHENSION SYNTAKS
-
-    fig.polygon(xs,ys)
-
+    fig.vektor(-1,0,1,1)
+    fig.punkt(0,0)
+    fig.vektor(0,0,.5,.5)
+    fig.vektor(0,0,.5,-.5)
     fig.sirkel(0.5,0.5,0.5)
 
-    fig.punkt(0,0)
+    # MER KOMPLISERT KURVE
+    xs = ( 0.5*math.sin(0.05*i)*math.cos(0.06*i)-.6 for i in range(629) ) # GENERATOR COMPREHENSION SYNTAKS
+    ys = ( math.cos(0.04*i) for i in range(629) ) # GENERATOR COMPREHENSION SYNTAKS
+    fig.polygon(xs,ys)
+
+    # AD HOC-løsning for fargebehandling.
+    # Tkinter ser ut til å kreve
+    # at fargene representeres som hex-strenger.
+    # I utgangspunktet vikrer det idiotisk å 
+    # gå via et string-objekt.
+    # TODO: Eliminer denne workarounden ved å sende
+    # rgb-verdiene rett til create_rectangle. (Det er 
+    # dog tilsynelatende ikke mulig.)
+    def rgb2hex(r,g,b):
+        number =r*(1<<16) + g*(1<<8) + b
+        string = "#"+hex((1<<24) + int(number))[3:]
+        return string 
+
+    def colorFunction(x,y):
+        return rgb2hex(x+y,abs(y-x),0.3*x)
 
     for x,y in fig.piksler():
-        if x < y:
+        if (x-300)**2 + (y-100)**2 < 1300:
+            fig.settPiksel(x,y,colorFunction(x,y))
+
+    for x,y in fig.piksler():
+        if (x-100)**2 + (y-500)**2 < 1300:
             fig.settPiksel(x,y,"blue")
 
     fig.vis()
-
-
-
