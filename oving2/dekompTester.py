@@ -10,10 +10,14 @@ def add(u,v):
     return [ ui+vi for (ui,vi) in zip(u,v)]
 
 def erLike(u,v):
-    return all( ui==vi for (ui,vi) in zip(u,v) )
+    return all( abs(ui-vi) < 1e-10 for (ui,vi) in zip(u,v) )
 
 def erParallelle(u,v):
-    return dot(u,v)**2 - dot(u,u)*dot(v,v) == 0
+    return abs(dot(u,v)**2 - dot(u,u)*dot(v,v)) < 1e-10
+
+def erOrtognoale(u,v):
+    return abs(dot(u,v)) < 1e-10
+
 
 def testDecomp():
     n = random.randint(0,10)
@@ -27,7 +31,7 @@ def testDecomp():
     vPerp,vParallell = dekomp(u,v)
 
     assert erLike(add(vPerp,vParallell) , v), "Dekomposisjonen summerer seg ikke opp til den gitte vektoren"
-    assert dot(vPerp,u) == 0, "vPerp står ikke vinkelrett på u"
+    assert erOrtogonale(vPerp,u) , "vPerp står ikke vinkelrett på u"
     assert erParallelle(vParallell,u), "vParallell er ikke parallell med u"
 
 
