@@ -14,10 +14,15 @@ RADIUS_I_KILOMETER= 6371 # KILOMETER
 class posisjon:
 
     def __init__(self,breddegrad,lengdegrad):
-        self._lat = breddegrad
+        self._lat = breddegrad 
         self._lon = lengdegrad
+        # MRK: Enkel underscore i '_lat' indikerer at jeg ønsker at 
+        # '_lat' skal behandles som en privat variabel. 
+        # Det er opp til utvikleren om man vil respektere dette,
+        # i og med at python ikke har noen innebygget mekanisme for
+        # private variabler.
 
-    def _coords():
+    def koordinater():
         x, y,z = 0,0,0 # TODO: FYLL INN DET SOM MANGLER
         return x,y,z
 
@@ -30,8 +35,12 @@ def geodetiskAvstand(A,B):
     return 0 
 
 
-if __name__=="__main__":
-    oslo = posisjon(59.95,10.75)
-    london = posisjon(51.50,0.0)
+def main():
+    oslo = posisjon(59.911,10.761)
+    london = posisjon(51.481,0.0)
     print("Storsirkelavstanden mellom Oslo og London er ifølge dette scriptet",geodetiskAvstand(oslo,london),"kilometer.")
     print("Ifølge distancecalculator.net er den korrekte avstanden på omtrent 1153 kilometer")
+
+
+if __name__=="__main__":
+    main()
