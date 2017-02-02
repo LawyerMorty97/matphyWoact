@@ -13,7 +13,7 @@ def erLike(u,v):
     return all( abs(ui-vi) < 1e-10 for (ui,vi) in zip(u,v) )
 
 def erParallelle(u,v):
-    return abs(dot(u,v)**2 - dot(u,u)*dot(v,v)) < 1e-10
+    return abs(dot(u,u)*dot(v,v) - dot(u,v)**2) < 1e-10 ## Kontrollerer om arealet er omtrent lik 0.
 
 def erOrtognoale(u,v):
     return abs(dot(u,v)) < 1e-10
