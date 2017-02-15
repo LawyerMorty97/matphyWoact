@@ -4,7 +4,7 @@
 # For å kunne teste løsningen med den angitte main-metoden, er man nødt til å
 # følge det valget.
 
-# MULIG NYTTIG HJELPEMETODEA?
+# MULIG NYTTIG HJELPEMETODE?
 def forflytning(A,B):
     return tuple((b-a for a,b in zip(A,B)))
 

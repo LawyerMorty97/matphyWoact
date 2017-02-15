@@ -3,6 +3,7 @@
 # AVHENGER AV AT MODULEN tkinter er installert.
 
 import tkinter as tk
+import math
 
 class figur:
     """Klasse for å lage enkle figurer
