@@ -89,10 +89,12 @@ class figur:
         """Tegner polygonet gjennom gjennom punktene (xs[0],ys[0]), (xs[1],ys[1]) ,...."""
         xs,ys = iter(xs),iter(ys)
         xp,yp= next(xs),next(ys)
+        x0,y0 = xp,yp
 
         for x,y in zip(xs,ys):
             self.linje(xp,yp,x,y)
             xp,yp = x,y
+        self.linje(xp,yp,x0,y0)
 
     # AVHENGER AV polygon
     def rektangel(self,x0,y0,x1,y1):
