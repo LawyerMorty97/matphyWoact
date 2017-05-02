@@ -10,13 +10,20 @@ class punkt2D:
         self.y = y
         
     def __str__(self,):
-        return "({0}, {1})".format(self.x,self.y)
+        return "Punkt({0}, {1})".format(self.x,self.y)
 
     def __repr__(self):
         return str(self)
 
     def __add__(self,vektor):
         return punkt2D(self.x+vektor.x, self.y+ vektor.y)
+    
+    def __iter__(self):
+        return self.generator()
+
+    def generator(self):
+        yield self.x
+        yield self.y
     
     def posVektor(self):
         return vektor2D(self.x,self.y)        
@@ -42,6 +49,13 @@ class vektor2D:
    
     def __repr__(self):
         return str(self)
+
+    def __iter__(self):
+        return self.generator()
+
+    def generator(self):
+        yield self.x
+        yield self.y
 
     def __add__(self,other):
         """Definerer vektoraddisjon"""

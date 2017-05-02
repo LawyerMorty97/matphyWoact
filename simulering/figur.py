@@ -73,6 +73,11 @@ class figur:
 
         self.lerret.create_line(x0,y0,x1,y1,arrow=tk.LAST,arrowshape=(12,15,5))
 
+    def dot(self,x,y):
+        """Tegner en prikk i punktet (x,y)"""
+        x,y = self._transform(x,y)
+        self.lerret.create_oval(x-1,y-1,x+1,y+1,fill="black")
+
     def punkt(self,x,y):
         """Tegner en prikk i punktet (x,y)"""
         x,y = self._transform(x,y)
@@ -95,6 +100,14 @@ class figur:
             self.linje(xp,yp,x,y)
             xp,yp = x,y
         self.linje(xp,yp,x0,y0)
+
+    def kurve(self,xs,ys):
+        xs,ys = iter(xs),iter(ys)
+        xp,yp = next(xs),next(ys)
+        for x,y in zip(xs,ys):
+            self.linje(xp,yp,x,y)
+            xp,yp = x,y
+            
 
     # AVHENGER AV polygon
     def rektangel(self,x0,y0,x1,y1):
