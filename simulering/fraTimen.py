@@ -20,7 +20,7 @@ def solGravitasjon(posisjon):
 
 if __name__=='__main__':
     
-    data = ( ((0.01*i,0.02*i), (0,0)) for i in range(100) )
+    data = [ ( (0.01*i,0.02*i), (0,0) ) for i in range(100) ]
 
     animasjon(data)
 

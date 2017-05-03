@@ -128,6 +128,7 @@ if __name__=='__main__':
     v = vektor3D(1,0,0)
     u= vektor3D(4,5,6)
 
+    w = u+v.
 
     A.tegn(fig)
     B.tegn(fig)
