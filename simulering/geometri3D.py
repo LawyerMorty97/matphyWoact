@@ -19,13 +19,24 @@ class punkt3D:
     def __add__(self,vektor):
         return punkt3D(self.x+vektor.x, self.y+ vektor.y,self.z+vektor.z)
     
-    def __iter__(self):
-        return self.generator()
+
+    def __getitem__(self,key):
+        if (key == 0):
+            return self.x
+        elif (key == 1):
+            return self.y
+        elif (key == 2):
+            return self.z
+        else:
+            return 0
 
     def generator(self):
         yield self.x
         yield self.y
         yield self.z
+
+    def __iter__(self):
+        return self.generator()
     
     def posVektor(self):
         return vektor3D(self.x,self.y,self.z)        
@@ -53,6 +64,17 @@ class vektor3D:
    
     def __repr__(self):
         return str(self)
+
+
+    def __getitem__(self,key):
+        if (key == 0):
+            return self.x
+        elif (key == 1):
+            return self.y
+        elif (key == 2):
+            return self.z
+        else:
+            return 0
 
     def __iter__(self):
         return self.generator()
@@ -128,7 +150,7 @@ if __name__=='__main__':
     v = vektor3D(1,0,0)
     u= vektor3D(4,5,6)
 
-    w = u+v.
+    w = u+v
 
     A.tegn(fig)
     B.tegn(fig)
