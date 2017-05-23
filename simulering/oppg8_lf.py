@@ -225,7 +225,7 @@ def oppgaveG():
         signChangeCount = -1
         timeCount = 0
         signFlag = 1 if xJord[0] > 0 else -1
-        N = 2
+        N = 3
         
         for x in simulation(h):
             if (x[0][0]*signFlag < 0):
@@ -243,11 +243,11 @@ def oppgaveG():
     print("Vi anslår at det er",antallDøgnIÅr(),"døgn i ett år (Med Størmers metode)")
 
     def antallDøgnIMåned():
-        h = 1.0/24/60 # 1 steg =1/4 time
+        h = 1.0/24 # 1 steg =0.5 minutt
         signChangeCount = -1
         timeCount = 0
         signFlag = 1 if xJord.prikk(xMåne-xJord) > 0 else -1
-        N = 1
+        N = 3
         
         for xJ,xM,_ in simulation(h):
             if (xJ.prikk(xM-xJ)*signFlag < 0): # Kontrollerer når skalarproduktet mellom vektoren Sol-Jord og vektoren Jord-Måne endrer fortegn.
@@ -265,7 +265,7 @@ def oppgaveG():
         
         return timeCount/N
 
-    #print("Vi anslår at det er",antallDøgnIMåned(),"døgn i en måne-måned")
+    print("Vi anslår at det er",antallDøgnIMåned(),"døgn i en måne-måned")
     return simulation
 
 
@@ -293,18 +293,104 @@ def takeFromGenerator(generator,N):
         yield x
 
 
+
+def ideerTilMerAvansertLøsning():
+
+    class planet():
+        def __init__(self,pos,vel,mass):
+            self.pos = pos
+            self.vel = vel
+            self.acc = None
+            self.mass = mass
+            self.listOfPlanets = []
+
+        def addPlanet(self,other):
+            self.listOfPlanets.append(other);
+
+        def gravitationalAccelerationOn(self,other):
+            disp = self.pos-other.pos
+            dist = disp.lengde()
+            return G*self.mass/dist**3*disp
+
+        def updateState(self,step):
+            self.pos += step*self.vel + 0.5*step**2*self.acc
+            self.vel += step*self.acc
+
+        def updateAcceleration(self):
+            self.acc = sum((planet.gravitationalAccelerationOn(self) for planet in self.listOfPlanets),vec(0,0,0))
+
+        def step(self,step):
+            self.updateAcceleration()
+            self.updateState(step)
+
+
+    class planetII():
+        def __init__(self,posNow,posPrev,mass):
+            self.pos = posNow
+            self.posPrev = posPrev
+            self.acc = None
+            self.mass = mass
+            self.listOfPlanets = []
+
+        def addPlanet(self,other):
+            self.listOfPlanets.append(other);
+
+        def gravitationalAccelerationOn(self,other):
+            disp = self.pos-other.pos
+            dist = disp.lengde()
+            return G*self.mass/dist**3*disp
+
+        def updateState(self,step):
+            self.pos,self.posPrev = 2*self.pos-self.posPrev+step**2*self.acc, self.pos
+
+        def updateAcceleration(self):
+            self.acc = sum((planet.gravitationalAccelerationOn(self) for planet in self.listOfPlanets),vec(0,0,0))
+
+        def step(self,step):
+            self.updateAcceleration()
+            self.updateState(step)
+
+
+    def solsystemSimulator(h):
+        sol = planet(xSol,vSol,mSol)
+        jord = planetII(xJord,xJord-h*vJord,mJord)
+        måne = planet(xMåne,vMåne,mMåne)
+        jupiter = planet(xJupiter,vJupiter,mJupiter)
+
+        planeter = [sol,jupiter,jord,måne]
+        
+
+        for p in planeter:
+            for q in planeter:
+                if (p != q):
+                    p.addPlanet(q)
+
+        while True:
+            yield tuple(p.pos for p in planeter)
+            for p in planeter:
+                p.step(h)
+
+
+    animasjon(solsystemSimulator(1),-6,-6,6,6)
+
+
+        
+        
+        
+
+
+
+
 if __name__=='__main__':
-    oppgaveC()
+    #oppgaveC()
     #simuleringD = oppgaveD()
     #simuleringE = oppgaveE()
     #simuleringF = oppgaveF()
-    simuleringG = oppgaveG()
+    #simuleringG = oppgaveG()
 
-    tegnOppgF(10000)
-    tegnOppgG(10000)
+    #tegnOppgF(10000)
+    #tegnOppgG(10000)
 
     # Animasjon
-    animasjon(simuleringG(0.1))
-
-    
-
+    #animasjon(oppgaveG()(1))
+    ideerTilMerAvansertLøsning()
